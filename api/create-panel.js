@@ -16,9 +16,8 @@ export default async function handler(req, res) {
   const { username, ram, disk, cpu, hostingPackage, panelType, accessKey } = req.query;
 
   // --- VALIDASI SISI SERVER (PENTING!) ---
-  // Anda harus mengatur VERCEL_WEBSITE_ACCESS_KEY di Vercel Dashboard Environment Variables.
-  // Ini adalah validasi sisi server untuk 'accessKey' Anda.
-  const WEBSITE_ACCESS_KEY_SERVER = process.env.VITE_WEBSITE_ACCESS_KEY; // Ambil dari Vercel Env Vars
+  // Anda harus mengatur VITE_WEBSITE_ACCESS_KEY di Vercel Dashboard Environment Variables.
+  const WEBSITE_ACCESS_KEY_SERVER = process.env.VITE_WEBSITE_ACCESS_KEY; 
   if (accessKey !== WEBSITE_ACCESS_KEY_SERVER) {
     return res.status(401).json({ status: false, message: 'Unauthorized: Invalid Access Key.' });
   }
@@ -80,18 +79,16 @@ export default async function handler(req, res) {
     .replace('nestid=', `nestid=${currentPanelConfig.nestId}`)
     .replace('loc=', `loc=${currentPanelConfig.loc}`)
     .replace('domain=', `domain=${encodeURIComponent(currentPanelConfig.domain)}`)
-    .replace('ptla=', `ptla=${currentPanelConfig.ptla}`) // <<< INI YANG AMAN DARI ENV VARS
-    .replace('ptlc=', `ptlc=${currentPanelConfig.ptlc}`); // <<< INI YANG AMAN DARI ENV VARS
+    .replace('ptla=', `ptla=${currentPanelConfig.ptla}`) 
+    .replace('ptlc=', `ptlc=${currentPanelConfig.ptlc}`); 
 
   try {
     const apiResponse = await fetch(finalPteroApiUrl);
     const apiData = await apiResponse.json();
 
-    // Teruskan respons dari API Pterodactyl ke frontend
     if (apiResponse.ok && apiData.status) {
       res.status(200).json(apiData);
     } else {
-      // Teruskan pesan error dari API eksternal, atau pesan default jika tidak ada
       res.status(apiResponse.status || 500).json(apiData || { status: false, message: 'Failed to create server via external API.' });
     }
   } catch (error) {
