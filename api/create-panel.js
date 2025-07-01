@@ -1,35 +1,24 @@
 // api/create-panel.js
 // Ini adalah serverless function yang akan berjalan di Vercel
 
-// Untuk menggunakan `fetch` di Node.js (lingkungan serverless),
-// Anda mungkin perlu menginstalnya jika belum ada di proyek Anda:
-// npm install node-fetch
 import fetch from 'node-fetch'; 
 
 export default async function handler(req, res) {
-  // Pastikan ini adalah metode GET karena API eksternal Anda menggunakan GET
   if (req.method !== 'GET') {
     return res.status(405).json({ status: false, message: 'Method Not Allowed. Only GET is supported.' });
   }
 
-  // Ambil parameter dari query string yang dikirim oleh frontend
-  const { username, ram, disk, cpu, hostingPackage, panelType, accessKey } = req.query;
+  const { username, ram, disk, cpu, hostingPackage, panelType } = req.query;
 
-  // --- VALIDASI SISI SERVER (PENTING!) ---
-  // Anda harus mengatur VITE_WEBSITE_ACCESS_KEY di Vercel Dashboard Environment Variables.
-  const WEBSITE_ACCESS_KEY_SERVER = process.env.VITE_WEBSITE_ACCESS_KEY; 
-  if (accessKey !== WEBSITE_ACCESS_KEY_SERVER) {
-    return res.status(401).json({ status: false, message: 'Unauthorized: Invalid Access Key.' });
-  }
+  // Validasi Access Key sudah dilakukan di `validate-access-key.js`
+  // sehingga tidak perlu lagi divalidasi atau diambil di sini.
 
-  // Validasi parameter wajib
   if (!username || !ram || !disk || !cpu || !panelType || !hostingPackage) {
     return res.status(400).json({ status: false, message: 'Missing required parameters.' });
   }
 
   // --- Ambil Konfigurasi Sensitif dari Environment Variables Vercel ---
-  // Variabel-variabel ini HARUS DIATUR di Vercel Dashboard Anda
-  // (Project Settings -> Environment Variables)
+  // Variabel-variabel ini HARUS diatur di Vercel Dashboard Anda
   const PUBLIC_PANEL_DOMAIN = process.env.VITE_PUBLIC_PANEL_DOMAIN; 
   const PUBLIC_PANEL_PTLA = process.env.VITE_PUBLIC_PANEL_PTLA;
   const PUBLIC_PANEL_PTLC = process.env.VITE_PUBLIC_PANEL_PTLC;
@@ -69,7 +58,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ status: false, message: 'Invalid panel type provided.' });
   }
 
-  // Bangun URL API Pterodactyl menggunakan data dari request frontend dan variabel lingkungan aman
   const finalPteroApiUrl = BASE_URL_PTERODACTYL_API_TEMPLATE
     .replace('username=', `username=${encodeURIComponent(username)}`)
     .replace('ram=', `ram=${ram}`)
