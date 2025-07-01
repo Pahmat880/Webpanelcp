@@ -41,7 +41,6 @@
             position: relative;
         }
 
-        /* --- Particle / Background Effect --- */
         .background-particles {
             position: absolute;
             top: 0;
@@ -70,8 +69,6 @@
             75% { transform: translate(80vw, 40vh) scale(1.1); opacity: 0.25; }
             100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
         }
-        /* --- End Particle Effect --- */
-
 
         .container {
             background-color: var(--container-bg);
@@ -80,7 +77,7 @@
             box-shadow: 0 15px 40px var(--shadow-color);
             border: 1px solid var(--border-color);
             width: 100%;
-            max-width: 500px; /* Adjusted max-width for single form */
+            max-width: 500px;
             box-sizing: border-box;
             position: relative;
             z-index: 10;
@@ -89,7 +86,7 @@
             animation: containerEntry 0.6s ease-out forwards 0.3s;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center content horizontally */
+            align-items: center;
             margin: 20px auto;
         }
         @keyframes containerEntry {
@@ -97,7 +94,7 @@
         }
 
         h1 {
-            font-family: 'Orbitron', sans-serif; /* Futuristic font */
+            font-family: 'Orbitron', sans-serif;
             text-align: center;
             color: var(--primary-accent);
             margin-bottom: 35px;
@@ -107,7 +104,7 @@
             text-shadow: 0 0 10px rgba(97, 218, 251, 0.4);
         }
         
-        .section-title { /* Not used in this version, but kept for consistency */
+        .section-title {
             font-family: 'Orbitron', sans-serif;
             color: var(--secondary-accent);
             font-size: 1.8em;
@@ -116,7 +113,6 @@
             text-shadow: 0 0 8px rgba(164, 100, 244, 0.3);
         }
 
-        /* --- Form Elements --- */
         .form-group {
             margin-bottom: 25px;
             position: relative;
@@ -163,13 +159,11 @@
             background-size: 12px;
             padding-right: 35px;
         }
-        /* --- End Form Elements --- */
 
-        /* --- Button Style --- */
         .cyber-button {
             width: 100%;
             padding: 16px;
-            background-image: var(--gradient-1); /* Initial gradient */
+            background-image: var(--gradient-1);
             color: var(--bg-color);
             border: none;
             border-radius: 8px;
@@ -189,7 +183,7 @@
         }
 
         .cyber-button:hover {
-            background-image: var(--gradient-2); /* Reverse gradient on hover */
+            background-image: var(--gradient-2);
             transform: translateY(-3px);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
         }
@@ -199,7 +193,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .cyber-button::before { /* Animated border effect */
+        .cyber-button::before {
             content: '';
             position: absolute;
             top: -5px;
@@ -231,17 +225,15 @@
             border-image: none;
             border-color: #30363d;
         }
-        /* --- End Button Style --- */
 
-        /* --- Loader/Spinner Style --- */
         .loader-dots {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-left: 10px;
-            width: 30px; /* Space for dots */
-            height: 18px; /* Height of dots */
-            display: none; /* Hidden by default */
+            width: 30px;
+            height: 18px;
+            display: none;
         }
         .dot {
             width: 8px;
@@ -260,9 +252,7 @@
         @keyframes bounce {
             to { transform: translateY(-5px); }
         }
-        /* --- End Loader Style --- */
 
-        /* --- Message/Result Display --- */
         #responseMessage {
             margin-top: 30px;
             padding: 25px;
@@ -401,61 +391,6 @@
         .contact-message a:hover {
             text-decoration: underline;
         }
-        /* --- End Message/Result Display --- */
-
-        /* --- Toast Notification --- */
-        #toast-notification-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast-notification {
-            background-color: var(--container-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-color);
-            animation: slideInRight 0.4s ease-out forwards, fadeOut 0.5s ease-in forwards 2.5s;
-            transform: translateX(100%);
-            opacity: 0;
-            min-width: 250px;
-            max-width: 350px;
-            font-size: 0.9em;
-            font-weight: 500;
-        }
-
-        .toast-notification.success { border-left: 4px solid var(--success-color); }
-        .toast-notification.error { border-left: 4px solid var(--error-color); }
-        .toast-notification.info { border-left: 4px solid var(--primary-accent); }
-
-        .toast-notification .icon { font-size: 1.4em; line-height: 1; }
-        .toast-notification.success .icon { color: var(--success-color); }
-        .toast-notification.error .icon { color: var(--error-color); }
-        .toast-notification.info .icon { color: var(--primary-accent); }
-        .toast-notification .message { flex-grow: 1; }
-        
-        .toast-notification .close-btn {
-            background: none;
-            border: none;
-            color: var(--placeholder-color);
-            font-size: 1.2em;
-            cursor: pointer;
-            padding: 0 5px;
-            transition: color 0.2s ease;
-        }
-        .toast-notification .close-btn:hover { color: var(--text-color); }
-
-        @keyframes slideInRight { to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
     </style>
 </head>
 <body>
@@ -523,16 +458,19 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     <script>
-        /* --- JAVASCRIPT DI SINI --- */
         document.addEventListener('DOMContentLoaded', () => {
-            // --- KONFIGURASI PENTING UNTUK CLIENT-SIDE (tidak sensitif) ---
-            // WEBSITE_ACCESS_KEY akan di-bundle ke frontend JS oleh Vite.
-            // TIDAK GUNAKAN UNTUK API KEY PTERODACTYL. Validasi utamanya di serverless function.
-            const WEBSITE_ACCESS_KEY = import.meta.env.VITE_WEBSITE_ACCESS_KEY;
+            // --- KONFIGURASI PENTING UNTUK CLIENT-SIDE ---
+            // Endpoint untuk validasi Access Key
+            const YOUR_VALIDATION_API_ENDPOINT = '/api/validate-access-key'; 
 
-            // URL ke Serverless Function Anda di Vercel
-            const YOUR_VERCEL_API_ENDPOINT = '/api/create-panel';
+            // Endpoint untuk membuat panel
+            const YOUR_CREATE_PANEL_API_ENDPOINT = '/api/create-panel';
             
+            // Feature flags untuk Public/Private Panel (diatur langsung di JavaScript frontend)
+            // Ubah ke 'false' jika Anda tidak ingin opsi tersebut muncul di dropdown
+            const IS_PUBLIC_PANEL_ENABLED = true;
+            const IS_PRIVATE_PANEL_ENABLED = true;
+
             const PACKAGES = {
                 "1gb": { ram: 1024, disk: 1024, cpu: 100, name: "1 GB" },
                 "2gb": { ram: 2048, disk: 2048, cpu: 100, name: "2 GB" },
@@ -596,18 +534,37 @@
                 }, duration);
             }
 
+            // Fungsi untuk mempopulasi dropdown tipe panel (menggunakan feature flags lokal)
             function populatePanelTypeDropdown() {
                 panelTypeSelect.innerHTML = '<option value="" disabled selected>Pilih Tipe Panel</option>';
                 
-                const publicOption = document.createElement('option');
-                publicOption.value = 'public';
-                publicOption.textContent = 'Public Panel';
-                panelTypeSelect.appendChild(publicOption);
+                let optionsAdded = 0;
+                if (IS_PUBLIC_PANEL_ENABLED) {
+                    const publicOption = document.createElement('option');
+                    publicOption.value = 'public';
+                    publicOption.textContent = 'Public Panel';
+                    panelTypeSelect.appendChild(publicOption);
+                    optionsAdded++;
+                }
 
-                const privateOption = document.createElement('option');
-                privateOption.value = 'private';
-                privateOption.textContent = 'Private Panel';
-                panelTypeSelect.appendChild(privateOption);
+                if (IS_PRIVATE_PANEL_ENABLED) {
+                    const privateOption = document.createElement('option');
+                    privateOption.value = 'private';
+                    privateOption.textContent = 'Private Panel';
+                    panelTypeSelect.appendChild(privateOption);
+                    optionsAdded++;
+                }
+
+                if (optionsAdded === 0) {
+                    const noOption = document.createElement('option');
+                    noOption.value = '';
+                    noOption.textContent = 'Tidak ada panel tersedia';
+                    noOption.disabled = true;
+                    panelTypeSelect.appendChild(noOption);
+                    panelTypeSelect.disabled = true;
+                } else if (optionsAdded === 1) {
+                    panelTypeSelect.selectedIndex = 1;
+                }
             }
             // --- End Fungsi Utility ---
 
@@ -627,13 +584,28 @@
                 const username = document.getElementById('username').value;
                 const hostingPackage = document.getElementById('hostingPackage').value;
 
-                if (accessKey !== WEBSITE_ACCESS_KEY) {
-                    showToast('error', 'Access Key Salah!');
+                // --- Validasi Access Key melalui API Serverless Function ---
+                try {
+                    const validateUrl = `${YOUR_VALIDATION_API_ENDPOINT}?accessKey=${encodeURIComponent(accessKey)}`;
+                    const validationResponse = await fetch(validateUrl, { method: 'GET' });
+                    const validationData = await validationResponse.json();
+
+                    if (!validationData.isValid) {
+                        showToast('error', validationData.message || 'Access Key Salah!');
+                        createButton.textContent = 'Create Panel';
+                        createButton.disabled = false;
+                        loadingSpinner.style.display = 'none';
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error saat validasi Access Key:', error);
+                    showToast('error', 'Terjadi masalah saat memvalidasi Access Key. Coba lagi nanti.');
                     createButton.textContent = 'Create Panel';
                     createButton.disabled = false;
                     loadingSpinner.style.display = 'none';
                     return;
                 }
+                // --- Akhir Validasi Access Key ---
 
                 if (!selectedPanelType) {
                     showToast('error', 'Silakan pilih tipe panel (Public/Private)!');
@@ -671,18 +643,18 @@
 
                 const { ram, disk, cpu } = selectedPackage;
                 
-                // --- MEMANGGIL SERVERLESS FUNCTION ANDA ---
+                // --- MEMANGGIL SERVERLESS FUNCTION UNTUK MEMBUAT PANEL ---
+                // Data dikirim ke Serverless Function, bukan langsung ke API Pterodactyl
                 const requestParams = new URLSearchParams({
                     username: username,
                     ram: ram,
                     disk: disk,
                     cpu: cpu,
-                    hostingPackage: hostingPackage,
-                    panelType: selectedPanelType,
-                    accessKey: accessKey 
+                    hostingPackage: hostingPackage, 
+                    panelType: selectedPanelType, 
                 }).toString();
 
-                const finalRequestUrl = `${YOUR_VERCEL_API_ENDPOINT}?${requestParams}`;
+                const finalRequestUrl = `${YOUR_CREATE_PANEL_API_ENDPOINT}?${requestParams}`;
 
                 try {
                     const response = await fetch(finalRequestUrl, {
@@ -740,9 +712,9 @@ Domain: ${panelDomainUrl}
                         showToast('error', 'Gagal membuat panel!'); 
                     }
                 } catch (error) {
-                    console.error('Error saat menghubungi Serverless Function:', error);
+                    console.error('Error saat menghubungi Serverless Function Create Panel:', error);
                     showMainMessage('error', `Terjadi kesalahan jaringan atau server tidak merespons: ${error.message}.`); 
-                    showToast('error', 'Kesalahan koneksi Serverless API!'); 
+                    showToast('error', 'Kesalahan koneksi Serverless API (Create Panel)!'); 
                 } finally {
                     createButton.textContent = 'Create Panel';
                     createButton.disabled = false;
