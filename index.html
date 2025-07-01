@@ -23,6 +23,7 @@
             --shadow-color: rgba(0, 0, 0, 0.7);
             --gradient-1: linear-gradient(90deg, #61dafb 0%, #a464f4 100%); /* Adjusted gradient */
             --gradient-2: linear-gradient(90deg, #a464f4 0%, #61dafb 100%); /* Adjusted gradient */
+            --neon-glow: 0 0 5px var(--primary-accent), 0 0 10px var(--primary-accent), 0 0 20px var(--primary-accent);
         }
 
         body {
@@ -101,7 +102,7 @@
             font-size: 2.5em;
             font-weight: 700;
             letter-spacing: 0.05em;
-            text-shadow: 0 0 10px rgba(97, 218, 251, 0.4);
+            text-shadow: var(--neon-glow); /* Apply neon glow */
         }
         
         .section-title {
@@ -145,7 +146,7 @@
 
         .input-glow-border:focus {
             border-color: var(--primary-accent);
-            box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.3);
+            box-shadow: var(--neon-glow); /* Neon glow on focus */
             outline: none;
         }
 
@@ -160,6 +161,7 @@
             padding-right: 35px;
         }
 
+        /* --- Updated Button Style --- */
         .cyber-button {
             width: 100%;
             padding: 16px;
@@ -219,6 +221,8 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+            /* New: Disable glow when disabled */
+            text-shadow: none;
         }
         .cyber-button:disabled::before {
             animation: none;
@@ -226,6 +230,41 @@
             border-color: #30363d;
         }
 
+        /* New: Glitch effect for button text when loading */
+        .cyber-button.loading span:first-child {
+            animation: glitchText 0.8s infinite linear alternate-reverse;
+            padding-right: 10px; /* Space for dots */
+        }
+        @keyframes glitchText {
+            0% {
+                text-shadow: 0 0 var(--primary-accent), 0 0 var(--secondary-accent);
+                transform: translateX(0);
+            }
+            20% {
+                text-shadow: 2px 0 var(--primary-accent), -2px 0 var(--secondary-accent);
+                transform: translateX(-1px);
+            }
+            40% {
+                text-shadow: -2px 0 var(--primary-accent), 2px 0 var(--secondary-accent);
+                transform: translateX(1px);
+            }
+            60% {
+                text-shadow: 3px 0 var(--primary-accent), -3px 0 var(--secondary-accent);
+                transform: translateX(0);
+            }
+            80% {
+                text-shadow: -1px 0 var(--primary-accent), 1px 0 var(--secondary-accent);
+                transform: translateX(-1px);
+            }
+            100% {
+                text-shadow: 0 0 var(--primary-accent), 0 0 var(--secondary-accent);
+                transform: translateX(0);
+            }
+        }
+        /* --- End Updated Button Style --- */
+
+
+        /* --- Updated Loader/Spinner Style --- */
         .loader-dots {
             display: flex;
             align-items: center;
@@ -234,17 +273,20 @@
             width: 30px;
             height: 18px;
             display: none;
+            position: relative; /* For the glow */
         }
         .dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background-color: white;
+            background: var(--primary-accent); /* Use primary accent for dots */
             margin: 0 3px;
             animation: bounce 0.6s infinite alternate;
+            box-shadow: var(--neon-glow); /* Add glow to dots */
         }
         .dot:nth-child(2) {
             animation-delay: 0.2s;
+            background: var(--secondary-accent); /* Secondary accent for middle dot */
         }
         .dot:nth-child(3) {
             animation-delay: 0.4s;
@@ -252,6 +294,26 @@
         @keyframes bounce {
             to { transform: translateY(-5px); }
         }
+        /* --- End Updated Loader Style --- */
+
+        /* New: Progress Bar (Optional, can be used instead of or with dots) */
+        .loading-progress-bar {
+            width: 0%; /* Starts at 0 */
+            height: 4px;
+            background-image: var(--gradient-1);
+            border-radius: 2px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transition: width 0.5s ease-out; /* Smooth filling */
+            box-shadow: var(--neon-glow);
+            opacity: 0; /* Hidden by default */
+        }
+        .cyber-button.loading .loading-progress-bar {
+            width: 100%; /* Fills up when loading */
+            opacity: 1;
+        }
+
 
         #responseMessage {
             margin-top: 30px;
@@ -441,13 +503,12 @@
             </div>
 
             <button type="submit" id="createButton" class="cyber-button">
-                Create Panel
-                <span class="loader-dots" id="loadingSpinner">
+                <span>Create Panel</span> <span class="loader-dots" id="loadingSpinner">
                     <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
                 </span>
-            </button>
+                <div class="loading-progress-bar"></div> </button>
         </form>
 
         <div id="responseMessage" class=""></div>
@@ -460,16 +521,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- KONFIGURASI PENTING UNTUK CLIENT-SIDE ---
-            // Endpoint untuk validasi Access Key
             const YOUR_VALIDATION_API_ENDPOINT = '/api/validate-access-key'; 
-
-            // Endpoint untuk membuat panel
             const YOUR_CREATE_PANEL_API_ENDPOINT = '/api/create-panel';
             
-            // Feature flags untuk Public/Private Panel (diatur langsung di JavaScript frontend)
-            // Ubah ke 'false' jika Anda tidak ingin opsi tersebut muncul di dropdown
-            const IS_PUBLIC_PANEL_ENABLED = true;
-            const IS_PRIVATE_PANEL_ENABLED = true;
+            const IS_PUBLIC_PANEL_ENABLED = true; // Fitur ini diatur langsung di frontend
+            const IS_PRIVATE_PANEL_ENABLED = true; // Fitur ini diatur langsung di frontend
 
             const PACKAGES = {
                 "1gb": { ram: 1024, disk: 1024, cpu: 100, name: "1 GB" },
@@ -489,8 +545,10 @@
 
             const createPanelForm = document.getElementById('createPanelForm');
             const createButton = document.getElementById('createButton');
-            const responseMessageDiv = document.getElementById('responseMessage');
+            const createButtonText = createButton.querySelector('span:first-child'); // Dapatkan elemen span untuk teks
             const loadingSpinner = document.getElementById('loadingSpinner');
+            const progressBar = createButton.querySelector('.loading-progress-bar'); // Dapatkan elemen progress bar
+            const responseMessageDiv = document.getElementById('responseMessage');
             const toastContainer = document.getElementById('toast-notification-container');
             const panelTypeSelect = document.getElementById('panelType');
 
@@ -534,7 +592,6 @@
                 }, duration);
             }
 
-            // Fungsi untuk mempopulasi dropdown tipe panel (menggunakan feature flags lokal)
             function populatePanelTypeDropdown() {
                 panelTypeSelect.innerHTML = '<option value="" disabled selected>Pilih Tipe Panel</option>';
                 
@@ -573,9 +630,15 @@
             createPanelForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
 
-                createButton.textContent = 'Creating Panel'; 
+                // --- Mulai Efek Loading ---
                 createButton.disabled = true;
-                loadingSpinner.style.display = 'flex'; 
+                createButton.classList.add('loading'); // Tambahkan kelas loading
+                createButtonText.textContent = 'CREATING'; // Ubah teks tombol
+                loadingSpinner.style.display = 'flex'; // Tampilkan spinner
+                progressBar.style.width = '100%'; // Mulai animasi progress bar
+                progressBar.style.opacity = '1';
+                // --- Akhir Efek Loading ---
+
                 responseMessageDiv.innerHTML = ''; 
                 responseMessageDiv.className = ''; 
 
@@ -592,59 +655,40 @@
 
                     if (!validationData.isValid) {
                         showToast('error', validationData.message || 'Access Key Salah!');
-                        createButton.textContent = 'Create Panel';
-                        createButton.disabled = false;
-                        loadingSpinner.style.display = 'none';
-                        return;
+                        return; // Hentikan eksekusi jika tidak valid
                     }
                 } catch (error) {
                     console.error('Error saat validasi Access Key:', error);
                     showToast('error', 'Terjadi masalah saat memvalidasi Access Key. Coba lagi nanti.');
-                    createButton.textContent = 'Create Panel';
-                    createButton.disabled = false;
-                    loadingSpinner.style.display = 'none';
-                    return;
+                    return; // Hentikan eksekusi jika error
                 }
                 // --- Akhir Validasi Access Key ---
 
                 if (!selectedPanelType) {
                     showToast('error', 'Silakan pilih tipe panel (Public/Private)!');
-                    createButton.textContent = 'Create Panel';
-                    createButton.disabled = false;
-                    loadingSpinner.style.display = 'none';
                     return;
                 }
 
                 if (!username || !hostingPackage) {
                     showToast('error', 'Username dan Paket Hosting harus diisi!');
-                    createButton.textContent = 'Create Panel';
-                    createButton.disabled = false;
-                    loadingSpinner.style.display = 'none';
                     return;
                 }
 
                 const usernameInput = document.getElementById('username');
                 if (!usernameInput.checkValidity()) {
                     showToast('error', `Username tidak valid: ${usernameInput.title}`);
-                    createButton.textContent = 'Create Panel';
-                    createButton.disabled = false;
-                    loadingSpinner.style.display = 'none';
                     return;
                 }
 
                 const selectedPackage = PACKAGES[hostingPackage];
                 if (!selectedPackage) {
                     showToast('error', 'Pilih paket hosting yang valid.');
-                    createButton.textContent = 'Create Panel';
-                    createButton.disabled = false;
-                    loadingSpinner.style.display = 'none';
                     return;
                 }
 
                 const { ram, disk, cpu } = selectedPackage;
                 
                 // --- MEMANGGIL SERVERLESS FUNCTION UNTUK MEMBUAT PANEL ---
-                // Data dikirim ke Serverless Function, bukan langsung ke API Pterodactyl
                 const requestParams = new URLSearchParams({
                     username: username,
                     ram: ram,
@@ -716,9 +760,14 @@ Domain: ${panelDomainUrl}
                     showMainMessage('error', `Terjadi kesalahan jaringan atau server tidak merespons: ${error.message}.`); 
                     showToast('error', 'Kesalahan koneksi Serverless API (Create Panel)!'); 
                 } finally {
-                    createButton.textContent = 'Create Panel';
+                    // --- Hentikan Efek Loading ---
                     createButton.disabled = false;
+                    createButton.classList.remove('loading');
+                    createButtonText.textContent = 'CREATE PANEL'; // Kembalikan teks tombol
                     loadingSpinner.style.display = 'none';
+                    progressBar.style.width = '0%'; // Reset progress bar
+                    progressBar.style.opacity = '0';
+                    // --- Akhir Hentikan Efek Loading ---
                 }
             });
 
